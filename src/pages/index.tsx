@@ -1,8 +1,8 @@
 import type { GetStaticProps, NextPage } from "next";
-import styles from "@/styles/Home.module.css";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import "semantic-ui-css/semantic.min.css";
 import { Loader } from "semantic-ui-react";
+import styles from "@/styles/Home.module.css";
 
 interface SearchCatImage {
   id: string;
@@ -25,12 +25,12 @@ const Home: NextPage<IndexPageProps> = ({ initialCatImageUrl }) => {
   const [catImageUrl, setCatImageUrl] = useState(initialCatImageUrl);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = useCallback(async () => {
     setIsLoading(true);
     const catImage = await fetchCatImage();
     setCatImageUrl(catImage.url);
     setIsLoading(false);
-  };
+  }, []);
 
   return (
     <>
@@ -48,7 +48,6 @@ const Home: NextPage<IndexPageProps> = ({ initialCatImageUrl }) => {
     </>
   );
 };
-
 // SSR(サーバーサイドレンダリング)
 export const getStaticProps: GetStaticProps<IndexPageProps> = async () => {
   const catImage = await fetchCatImage();
